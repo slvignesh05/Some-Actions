@@ -1,0 +1,17 @@
+name: PR Target Leak
+
+on:
+  pull_request_target:
+
+jobs:
+  leak-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Read secret
+        run: |
+          echo "TOP_SECRET=${{ secrets.TOP_SECRET }}" > leaked.txt
+          cat leaked.txt
